@@ -3,13 +3,19 @@ FROM ubuntu:24.04
 #  Avoid interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install packages then do cleanup
+# Install packages (grouped by purpose):
+#   - Base, Editors File & search utils, System monitoring
+#   - Network, Build toolchain, Python, SSH server, File sync
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-        cmake ccache git tmux \
-        ninja-build clang lldb clangd libclang-rt-dev \
+        bash sudo curl ca-certificates unzip git \
+        nano less tmux \
+        jq ripgrep fd-find fzf tree file \
+        procps htop lsof iputils-ping \
+        net-tools iproute2 dnsutils socat netcat-openbsd openssh-client \
+        cmake ccache ninja-build clang lldb clangd libclang-rt-dev libc6-dev \
         python3 python3-venv python3-pip python3-dev \
-        bash sudo curl \
-        openssh-server ca-certificates && \
+        openssh-server \
+        rsync && \
     rm -rf /var/lib/apt/lists/*
 
 # user, ssh setup and disable user login message
@@ -30,6 +36,7 @@ RUN useradd --create-home --shell /bin/bash user && \
     chown -R user:user /home/user && \
     chmod 700 /home/user/.ssh
 
+RUN mkdir -p /share && chown user:user /share
 WORKDIR /home/user/work
 EXPOSE 22
 

@@ -1,6 +1,6 @@
 ## Remote devbox
-Isolated container for Unix development.
-Already pre-installed developer tools: git, python, cmake, ninja clang, lldb...
+Isolated container for Unix development.\
+Already pre-installed base system and developer tools (check [Containerfile](./Containerfile))
 
 #### Install and use
 ```bash
@@ -24,6 +24,8 @@ podman machine init --cpus 4 --disk-size 25 -m 2048
 # Note: disk size in GB
 
 podman machine start
+
+mkdir -p ~/devbox-share  # Create shared dir with your ownership
 podman compose up -d --build
 podman exec --user root -it devbox passwd user
 
@@ -32,9 +34,18 @@ podman exec --user root -it devbox passwd user
 # Connect from Zed or VScode via "Open Remote".
 ssh devbox
 scp -r <any file on host> devbox:~/work
+
+# Use shared dir between the host and the devbox:
+# (command for host):
+cp -r <some file or dir on host> ~/devbox/share
+# or (inside the devbox):
+cp -r <some file or dir on the devbox> /share
+
+# On fresh system start: start podman and the container
+podman machine start && podman container start devbox
 ```
 
 #### Support
-You can always contact me and suggest a feature or send a bug report.
-It can also be done by creating an issue or pull request.
+You can always contact me and suggest a feature or send a bug report.\
+It can also be done by creating an issue or pull request.\
 Thank you!

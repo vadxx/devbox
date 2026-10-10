@@ -7,6 +7,8 @@ services:
     volumes:
     # ssh
       - ${HOME}/.ssh/devbox_ed25519.pub:/run/devbox_authorized_key:ro
+    # shared dir
+      - ${HOME}/devbox-share:/share
     ports:
       - "127.0.0.1:2200:22" # only at localhost for now
     restart: unless-stopped
