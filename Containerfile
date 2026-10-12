@@ -12,10 +12,10 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
         jq ripgrep fd-find fzf tree file \
         procps htop lsof iputils-ping \
         net-tools iproute2 dnsutils socat netcat-openbsd openssh-client \
-        cmake ccache ninja-build clang lldb clangd libclang-rt-dev libc6-dev \
+        cmake ccache ninja-build make clang lldb clangd libclang-rt-dev libc6-dev \
         python3 python3-venv python3-pip python3-dev \
-        openssh-server \
-        rsync && \
+        openssh-server rsync \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 # user, ssh setup and disable user login message
@@ -30,11 +30,9 @@ RUN mkdir -p /run/sshd && \
       >> /etc/ssh/sshd_config
 
 RUN useradd --create-home --shell /bin/bash user && \
-    usermod -aG sudo user && \
-    mkdir -p /home/user/.ssh /home/user/work && \
-    touch /home/user/.hushlogin && \
-    chown -R user:user /home/user && \
-    chmod 700 /home/user/.ssh
+    usermod -aG sudo user && chown -R user:user /home/user && \
+    mkdir -p /home/user/.ssh && chmod 700 /home/user/.ssh && \
+    touch /home/user/.hushlogin
 
 RUN mkdir -p /share && chown user:user /share
 WORKDIR /home/user/work

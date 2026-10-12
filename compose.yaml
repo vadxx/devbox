@@ -9,6 +9,11 @@ services:
       - ${HOME}/.ssh/devbox_ed25519.pub:/run/devbox_authorized_key:ro
     # shared dir
       - ${HOME}/devbox-share:/share
+    # user dir — survives rebuilds
+      - devbox-home:/home/user
     ports:
       - "127.0.0.1:2200:22" # only at localhost for now
     restart: unless-stopped
+
+volumes:
+  devbox-home:
