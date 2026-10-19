@@ -29,10 +29,13 @@ RUN mkdir -p /run/sshd && \
       'Subsystem sftp internal-sftp' \
       >> /etc/ssh/sshd_config
 
+# NOTE: chown runs LAST — anything created after it (incl. WORKDIR dirs,
+# which Docker creates as root) would stay root-owned and unwritable.
 RUN useradd --create-home --shell /bin/bash user && \
-    usermod -aG sudo user && chown -R user:user /home/user && \
-    mkdir -p /home/user/.ssh && chmod 700 /home/user/.ssh && \
-    touch /home/user/.hushlogin
+    usermod -aG sudo user && \
+    mkdir -p /home/user/.ssh /home/user/work && chmod 700 /home/user/.ssh && \
+    touch /home/user/.hushlogin && \
+    chown -R user:user /home/user
 
 RUN mkdir -p /share && chown user:user /share
 WORKDIR /home/user/work
