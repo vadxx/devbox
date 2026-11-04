@@ -1,5 +1,6 @@
 services:
   devbox:
+    image: ghcr.io/vadxx/devbox:main # prebuilt; --build overrides it locally
     build:
       context: .
       dockerfile: Containerfile
